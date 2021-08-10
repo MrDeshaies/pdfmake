@@ -110,6 +110,8 @@ PdfPrinter.prototype.createPdfKitDocument = function (docDefinition, options) {
 	options = options || {};
 
 	docDefinition.version = docDefinition.version || '1.3';
+	docDefinition.tagged = isBoolean(docDefinition.tagged) ? docDefinition.tagged : false;
+	docDefinition.displayTitle = isBoolean(docDefinition.displayTitle) ? docDefinition.displayTitle : false;
 	docDefinition.compress = isBoolean(docDefinition.compress) ? docDefinition.compress : true;
 	docDefinition.images = docDefinition.images || {};
 	docDefinition.pageMargins = ((docDefinition.pageMargins !== undefined) && (docDefinition.pageMargins !== null)) ? docDefinition.pageMargins : 40;
@@ -119,6 +121,8 @@ PdfPrinter.prototype.createPdfKitDocument = function (docDefinition, options) {
 	var pdfOptions = {
 		size: [pageSize.width, pageSize.height],
 		pdfVersion: docDefinition.version,
+		tagged: docDefinition.tagged,
+		displayTitle : docDefinition.displayTitle,
 		compress: docDefinition.compress,
 		userPassword: docDefinition.userPassword,
 		ownerPassword: docDefinition.ownerPassword,
@@ -128,6 +132,7 @@ PdfPrinter.prototype.createPdfKitDocument = function (docDefinition, options) {
 		autoFirstPage: false,
 		font: null
 	};
+	alert(pdfOptions)
 
 	this.pdfKitDoc = PdfKitEngine.createPdfDocument(pdfOptions);
 	setMetadata(docDefinition, this.pdfKitDoc);
@@ -178,7 +183,7 @@ function setMetadata(docDefinition, pdfKitDoc) {
 	// Custom properties don't contain a space.
 	function standardizePropertyKey(key) {
 		var standardProperties = ['Title', 'Author', 'Subject', 'Keywords',
-			'Creator', 'Producer', 'CreationDate', 'ModDate', 'Trapped'];
+			'Creator', 'Producer', 'CreationDate', 'ModDate', 'Trapped', 'Lang'];
 		var standardizedKey = key.charAt(0).toUpperCase() + key.slice(1);
 		if (standardProperties.indexOf(standardizedKey) !== -1) {
 			return standardizedKey;
